@@ -181,7 +181,7 @@ This section includes:
 - Product rule
 - Quotient rule
 - Chain rule
-- \(1/x\) rule
+- $1/x$ rule
 - Square-root derivative
 - Exponential rules
 - Natural-log and general logarithm rules
@@ -190,7 +190,7 @@ This section includes:
 - All six inverse-trigonometric derivatives
 - Inverse-function derivative rule
 - Implicit differentiation notation
-- General logarithmic-differentiation form for \(u^v\)
+- General logarithmic-differentiation form for $u^v$
 
 Examples:
 
@@ -203,15 +203,11 @@ $$
 $$
 
 $$
-\frac{d}{dx}\left(\frac{u}{v}\right)
-=
-\frac{vu'-uv'}{v^2}
+\frac{d}{dx}\left(\frac{u}{v}\right)=\frac{vu'-uv'}{v^2}
 $$
 
 $$
-\frac{d}{dx}\left(f(g(x))\right)
-=
-f'(g(x))g'(x)
+\frac{d}{dx}\left(f(g(x))\right)=f'(g(x))g'(x)
 $$
 
 $$
@@ -219,9 +215,7 @@ $$
 $$
 
 $$
-\frac{d}{dx}\left(\arctan x\right)
-=
-\frac{1}{1+x^2}
+\frac{d}{dx}\left(\arctan x\right)=\frac{1}{1+x^2}
 $$
 
 ## Keyboard Shortcuts
@@ -393,15 +387,15 @@ MathLive and CortexJS Compute Engine are open-source projects distributed under 
 
 ## GitHub LaTeX Compatibility
 
-The equations in this README are written using GitHub-supported math syntax.
+The equations in this README use GitHub-compatible math syntax.
 
 To avoid rendering problems:
 
 - Derivative operands use parentheses instead of square brackets in display equations.
 - Unsupported `\phantom` placeholders are not used.
 - Missing-answer examples use `\boxed{?}` instead.
-- Display equations use `$$ ... $$`.
-- Inline equations use `\( ... \)` only for simple expressions.
+- Each displayed derivative equation keeps the complete equation on one line inside its math block.
+- Inline math uses `$...$` instead of `\(...\)`.
 
 ## Project Structure
 
