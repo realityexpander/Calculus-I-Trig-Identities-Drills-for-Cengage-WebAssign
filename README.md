@@ -26,6 +26,7 @@ The app does **not** use multiple-choice questions. It shows one side of an equa
 - Reset Score control
 - Responsive desktop/mobile layout
 - Single-file HTML app
+- Conversation with ChatGPT 5.6 High: https://chatgpt.com/share/6ac154a0-5f3c-83ea-a783-49bd2f33e53d
 
 ## Sections
 
