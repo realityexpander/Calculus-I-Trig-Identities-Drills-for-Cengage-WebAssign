@@ -2,7 +2,8 @@
 
 A single-page browser app for memorizing and practicing the trigonometric identities commonly used in **Calculus I**.
 
-<img width="629" alt="image" src="https://github.com/user-attachments/assets/29313c3d-a4ce-4f4f-a1ac-8c3252056ce0" />
+<img width="690" alt="image" src="https://github.com/user-attachments/assets/988e1ac8-9334-428f-ae17-bf34a7d09f0d" />
+
 
 Link to live app: https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/
 
