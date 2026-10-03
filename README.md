@@ -2,11 +2,6 @@
 
 A single-page browser app for memorizing and practicing trigonometric identities and Calculus I derivative rules through active recall.
 
-<img width="695" alt="image" src="https://github.com/user-attachments/assets/22e0d380-9f65-4487-8fa7-c4cff2ef71c6" />
-
-Link to live app: https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/
-
-
 The app does **not** use multiple-choice questions. It shows one side of an equation and requires the user to type the missing side using an interactive mathematical equation editor.
 
 ## Features
@@ -56,15 +51,15 @@ $$
 ### 3. Pythagorean Identities
 
 $$
-\sin^2x+\cos^2x=1
+\sin^2 x+\cos^2 x=1
 $$
 
 $$
-1+\tan^2x=\sec^2x
+1+\tan^2 x=\sec^2 x
 $$
 
 $$
-1+\cot^2x=\csc^2x
+1+\cot^2 x=\csc^2 x
 $$
 
 ### 4. Useful Rearrangements
@@ -72,15 +67,15 @@ $$
 Includes forms such as:
 
 $$
-1-\sin^2x=\cos^2x
+1-\sin^2 x=\cos^2 x
 $$
 
 $$
-\sec^2x-1=\tan^2x
+\sec^2 x-1=\tan^2 x
 $$
 
 $$
-1-\sec^2x=-\tan^2x
+1-\sec^2 x=-\tan^2 x
 $$
 
 ### 5. Even / Odd Identities
@@ -108,21 +103,21 @@ $$
 $$
 
 $$
-\cos(2x)=\cos^2x-\sin^2x
+\cos(2x)=\cos^2 x-\sin^2 x
 $$
 
 $$
-\tan(2x)=\frac{2\tan x}{1-\tan^2x}
+\tan(2x)=\frac{2\tan x}{1-\tan^2 x}
 $$
 
 ### 7. Power-Reduction / Half-Angle Forms
 
 $$
-\sin^2x=\frac{1-\cos(2x)}{2}
+\sin^2 x=\frac{1-\cos(2x)}{2}
 $$
 
 $$
-\cos^2x=\frac{1+\cos(2x)}{2}
+\cos^2 x=\frac{1+\cos(2x)}{2}
 $$
 
 ### 8. Sum and Difference Identities
@@ -162,15 +157,15 @@ $$
 $$
 
 $$
-\sin^2x+\cos^2x=1
+\sin^2 x+\cos^2 x=1
 $$
 
 $$
-1+\tan^2x=\sec^2x
+1+\tan^2 x=\sec^2 x
 $$
 
 $$
-1+\cot^2x=\csc^2x
+1+\cot^2 x=\csc^2 x
 $$
 
 ### 11. Calculus I Derivative Rules
@@ -200,31 +195,31 @@ This section includes:
 Examples:
 
 $$
-\frac{d}{dx}[x^n]=nx^{n-1}
+\frac{d}{dx}\left(x^n\right)=nx^{n-1}
 $$
 
 $$
-\frac{d}{dx}[uv]=u'v+uv'
+\frac{d}{dx}\left(uv\right)=u'v+uv'
 $$
 
 $$
-\frac{d}{dx}\left[\frac{u}{v}\right]
+\frac{d}{dx}\left(\frac{u}{v}\right)
 =
 \frac{vu'-uv'}{v^2}
 $$
 
 $$
-\frac{d}{dx}[f(g(x))]
+\frac{d}{dx}\left(f(g(x))\right)
 =
 f'(g(x))g'(x)
 $$
 
 $$
-\frac{d}{dx}[\sin x]=\cos x
+\frac{d}{dx}\left(\sin x\right)=\cos x
 $$
 
 $$
-\frac{d}{dx}[\arctan x]
+\frac{d}{dx}\left(\arctan x\right)
 =
 \frac{1}{1+x^2}
 $$
@@ -294,16 +289,18 @@ After **Reveal** is selected:
 3. Keyboard focus moves to **Next Identity**.
 4. Pressing **Enter** advances immediately to the next question.
 
+After a correct answer, the same workflow is used: **Next Identity** is highlighted and pressing **Enter** advances.
+
 When the next question loads, the highlighted action resets to **Check Answer**.
 
 ## Answer Entry
 
 Each question displays one side of an equation and leaves the other side blank.
 
-Example:
+For example, the app may show:
 
 $$
-\tan x=\boxed{\phantom{\frac{\sin x}{\cos x}}}
+\tan x=\boxed{?}
 $$
 
 The user enters:
@@ -315,7 +312,27 @@ $$
 The direction may also be reversed:
 
 $$
-\boxed{\phantom{\tan x}}=\frac{\sin x}{\cos x}
+\boxed{?}=\frac{\sin x}{\cos x}
+$$
+
+The user then enters:
+
+$$
+\tan x
+$$
+
+For derivative-rule drills, equivalent grouping is accepted where it does not change the meaning. For example, the following forms are treated as equivalent:
+
+$$
+\frac{d}{dx}\left(\sec x\right)
+$$
+
+$$
+\frac{d}{dx}\sec x
+$$
+
+$$
+\frac{d}{dx}\sec(x)
 $$
 
 ## Answer Checking
@@ -323,6 +340,8 @@ $$
 The app first attempts symbolic comparison using the CortexJS Compute Engine.
 
 If symbolic comparison cannot confirm an answer, it falls back to normalized LaTeX comparison.
+
+The comparison also tolerates redundant brackets or parentheses where they do not change the mathematical meaning.
 
 Because the program is intended as a memorization drill, the expected answer is the identity or rule form being practiced.
 
@@ -372,11 +391,23 @@ The application itself is contained in one HTML file, but MathLive and the Corte
 
 MathLive and CortexJS Compute Engine are open-source projects distributed under the MIT License.
 
+## GitHub LaTeX Compatibility
+
+The equations in this README are written using GitHub-supported math syntax.
+
+To avoid rendering problems:
+
+- Derivative operands use parentheses instead of square brackets in display equations.
+- Unsupported `\phantom` placeholders are not used.
+- Missing-answer examples use `\boxed{?}` instead.
+- Display equations use `$$ ... $$`.
+- Inline equations use `\( ... \)` only for simple expressions.
+
 ## Project Structure
 
 ```text
 .
-├── Calculus_I_trig_identity_drill_v3.html
+├── Calculus_I_trig_identity_drill_v4.html
 ├── trig_identities_cheat_sheet.pdf
 └── README.md
 ```
