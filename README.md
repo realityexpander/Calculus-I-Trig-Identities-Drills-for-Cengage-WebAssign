@@ -4,6 +4,7 @@ A single-page browser app for memorizing and practicing the trigonometric identi
 
 <img width="629" alt="image" src="https://github.com/user-attachments/assets/29313c3d-a4ce-4f4f-a1ac-8c3252056ce0" />
 
+Link to live app: https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/
 
 Instead of multiple-choice questions, the app requires the user to **write the missing side of each identity in an equation editor**. Questions can be drilled left-to-right, right-to-left, or in both directions randomly.
 
