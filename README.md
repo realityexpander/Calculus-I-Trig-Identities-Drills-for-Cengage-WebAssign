@@ -2,6 +2,11 @@
 
 A single-page browser app for memorizing and practicing trigonometric identities and Calculus I derivative rules through active recall.
 
+[<img width="695" alt="image" src="https://github.com/user-attachments/assets/22e0d380-9f65-4487-8fa7-c4cff2ef71c6" >](https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/)
+
+Link to live app: https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/
+
+
 The app does **not** use multiple-choice questions. It shows one side of an equation and requires the user to type the missing side using an interactive mathematical equation editor.
 
 ## Features
