@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculus I Trig Identity Drill</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --ink:#182230;
+      --muted:#5b6675;
+      --line:#cfd7e3;
+      --accent:#245da8;
+      --accent-soft:#eaf1fb;
+      --correct:#0b5fa5;
+      --correct-bg:#e9f3ff;
+      --wrong:#9a4b00;
+      --wrong-bg:#fff2df;
+      --shadow:0 14px 40px rgba(20,35,60,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:linear-gradient(180deg,#eef3fa 0,var(--bg) 260px);
+    }
+    .wrap{max-width:1040px;margin:0 auto;padding:28px 18px 48px}
+    header{margin-bottom:18px}
+    h1{font-size:clamp(1.8rem,3.5vw,2.7rem);margin:.1rem 0 .35rem;line-height:1.1}
+    .subtitle{color:var(--muted);margin:0;max-width:850px;line-height:1.5}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px}
+    .controls{display:grid;grid-template-columns:1.5fr 1fr auto;gap:12px;align-items:end;margin-bottom:18px}
+    label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px}
+    select,button{
+      font:inherit;border-radius:10px;border:1px solid #aeb9c8;background:#fff;color:var(--ink);min-height:44px
+    }
+    select{width:100%;padding:0 12px}
+    button{padding:0 16px;font-weight:750;cursor:pointer}
+    button:hover{border-color:var(--accent)}
+    button.primary{background:var(--accent);color:white;border-color:var(--accent)}
+    button.ghost{background:#f7f9fc}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .meta{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+    .chip{font-size:.82rem;font-weight:750;background:var(--accent-soft);color:#234f86;border-radius:999px;padding:6px 10px}
+    .prompt{font-size:1rem;font-weight:700;color:var(--muted);margin:10px 0 10px}
+    .equation-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:center;margin:8px 0 14px}
+    .equals{font-family:Georgia,serif;font-size:2rem;font-weight:700;text-align:center}
+    math-field{
+      width:100%;min-height:78px;font-size:clamp(1.35rem,3vw,2rem);border:2px solid var(--line);border-radius:14px;padding:12px;background:#fff;
+      --caret-color:var(--accent);
+      --selection-background-color:#d8e8ff;
+      --contains-highlight-background-color:#eaf1fb;
+    }
+    math-field.known{background:#f4f7fb;border-color:#d4dce8}
+    math-field.answer{border-color:#7fa6d6;box-shadow:0 0 0 3px rgba(36,93,168,.08)}
+    .latex-line{font-size:.86rem;color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}
+    .latex-line code{background:#f3f5f8;border:1px solid #e1e5ea;border-radius:6px;padding:2px 5px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .feedback{margin-top:14px;border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:#f8fafc;min-height:50px;display:flex;align-items:center;font-weight:700}
+    .feedback.correct{color:var(--correct);background:var(--correct-bg);border-color:#9cc7ef}
+    .feedback.wrong{color:var(--wrong);background:var(--wrong-bg);border-color:#e8bb7a}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+    .stat{background:#f7f9fc;border:1px solid #dde3eb;border-radius:12px;padding:12px;text-align:center}
+    .stat strong{display:block;font-size:1.35rem}
+    .stat span{color:var(--muted);font-size:.82rem}
+    details{margin-top:18px;border-top:1px solid #e0e5ec;padding-top:14px}
+    summary{cursor:pointer;font-weight:800}
+    .section-list{columns:2;column-gap:28px;margin-top:8px;color:#39485b;font-size:.92rem;line-height:1.5}
+    footer{color:var(--muted);font-size:.82rem;margin-top:16px;line-height:1.5}
+    footer a{color:var(--accent)}
+    @media(max-width:720px){
+      .controls{grid-template-columns:1fr}
+      .equation-row{grid-template-columns:1fr;gap:8px}
+      .equals{font-size:1.5rem}
+      .stats{grid-template-columns:1fr}
+      .section-list{columns:1}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Calculus I Trig Identity Drill</h1>
+      <p class="subtitle">Complete each identity by typing the missing side in a real equation editor. Questions can run left-to-right or right-to-left. No multiple choice.</p>
+    </header>
+
+    <main class="panel">
+      <div class="controls">
+        <div>
+          <label for="sectionSelect">Section</label>
+          <select id="sectionSelect"></select>
+        </div>
+        <div>
+          <label for="directionSelect">Direction</label>
+          <select id="directionSelect">
+            <option value="both" selected>Both directions (random)</option>
+            <option value="ltr">Left → Right</option>
+            <option value="rtl">Right → Left</option>
+          </select>
+        </div>
+        <button id="resetBtn" class="ghost" type="button">Reset Score</button>
+      </div>
+
+      <div class="meta">
+        <span class="chip" id="sectionChip">Section</span>
+        <span class="chip" id="directionChip">Direction</span>
+      </div>
+
+      <div class="prompt">Complete the identity. Type only the missing side.</div>
+
+      <div class="equation-row" aria-label="Trig identity question">
+        <math-field id="leftField" aria-label="Left side of identity"></math-field>
+        <div class="equals" aria-hidden="true">=</div>
+        <math-field id="rightField" aria-label="Right side of identity"></math-field>
+      </div>
+
+      <p class="latex-line">Your LaTeX: <code id="latexValue">(empty)</code></p>
+
+      <div class="actions">
+        <button id="checkBtn" class="primary" type="button">Check Answer</button>
+        <button id="revealBtn" type="button">Reveal</button>
+        <button id="nextBtn" type="button">Next Identity</button>
+      </div>
+
+      <div id="feedback" class="feedback" role="status" aria-live="polite">Type the missing expression, then press <strong style="margin-left:.3em">Check Answer</strong>.</div>
+
+      <div class="stats" aria-label="Drill statistics">
+        <div class="stat"><strong id="completedStat">0</strong><span>Completed</span></div>
+        <div class="stat"><strong id="correctStat">0</strong><span>Correct</span></div>
+        <div class="stat"><strong id="streakStat">0</strong><span>Current streak</span></div>
+      </div>
+
+      <details>
+        <summary>Sections in this drill</summary>
+        <div class="section-list" id="sectionList"></div>
+      </details>
+    </main>
+
+    <footer>
+      Equation entry is provided by <a href="https://mathlive.io/" target="_blank" rel="noopener">MathLive</a>, with symbolic parsing by the <a href="https://cortexjs.io/compute-engine/" target="_blank" rel="noopener">CortexJS Compute Engine</a>. Both are MIT-licensed open-source projects. This single HTML file loads those libraries from a CDN, so an internet connection is needed when the page starts.
+    </footer>
+  </div>
+
+  <script type="module">
+    import { MathfieldElement } from "https://esm.run/mathlive";
+    import { ComputeEngine } from "https://esm.run/@cortex-js/compute-engine";
+
+    const ce = new ComputeEngine();
+    MathfieldElement.computeEngine = ce;
+
+    const sections = [
+      {
+        id: 1,
+        name: "Reciprocal Identities",
+        items: [
+          ["\\csc x", "\\frac{1}{\\sin x}"],
+          ["\\sec x", "\\frac{1}{\\cos x}"],
+          ["\\cot x", "\\frac{1}{\\tan x}"]
+        ]
+      },
+      {
+        id: 2,
+        name: "Quotient Identities",
+        items: [
+          ["\\tan x", "\\frac{\\sin x}{\\cos x}"],
+          ["\\cot x", "\\frac{\\cos x}{\\sin x}"]
+        ]
+      },
+      {
+        id: 3,
+        name: "Pythagorean Identities",
+        items: [
+          ["\\sin^2 x+\\cos^2 x", "1"],
+          ["1+\\tan^2 x", "\\sec^2 x"],
+          ["1+\\cot^2 x", "\\csc^2 x"]
+        ]
+      },
+      {
+        id: 4,
+        name: "Useful Rearrangements",
+        items: [
+          ["1-\\sin^2 x", "\\cos^2 x"],
+          ["1-\\cos^2 x", "\\sin^2 x"],
+          ["\\sec^2 x-1", "\\tan^2 x"],
+          ["\\csc^2 x-1", "\\cot^2 x"],
+          ["1-\\sec^2 x", "-\\tan^2 x"],
+          ["1-\\csc^2 x", "-\\cot^2 x"]
+        ]
+      },
+      {
+        id: 5,
+        name: "Even / Odd Identities",
+        items: [
+          ["\\sin(-x)", "-\\sin x"],
+          ["\\cos(-x)", "\\cos x"],
+          ["\\tan(-x)", "-\\tan x"],
+          ["\\csc(-x)", "-\\csc x"],
+          ["\\sec(-x)", "\\sec x"],
+          ["\\cot(-x)", "-\\cot x"]
+        ]
+      },
+      {
+        id: 6,
+        name: "Double-Angle Identities",
+        items: [
+          ["\\sin(2x)", "2\\sin x\\cos x"],
+          ["\\cos(2x)", "\\cos^2 x-\\sin^2 x"],
+          ["\\cos(2x)", "2\\cos^2 x-1"],
+          ["\\cos(2x)", "1-2\\sin^2 x"],
+          ["\\tan(2x)", "\\frac{2\\tan x}{1-\\tan^2 x}"]
+        ]
+      },
+      {
+        id: 7,
+        name: "Power-Reduction / Half-Angle Forms",
+        items: [
+          ["\\sin^2 x", "\\frac{1-\\cos(2x)}{2}"],
+          ["\\cos^2 x", "\\frac{1+\\cos(2x)}{2}"]
+        ]
+      },
+      {
+        id: 8,
+        name: "Sum and Difference Identities",
+        items: [
+          ["\\sin(a+b)", "\\sin a\\cos b+\\cos a\\sin b"],
+          ["\\sin(a-b)", "\\sin a\\cos b-\\cos a\\sin b"],
+          ["\\cos(a+b)", "\\cos a\\cos b-\\sin a\\sin b"],
+          ["\\cos(a-b)", "\\cos a\\cos b+\\sin a\\sin b"],
+          ["\\tan(a+b)", "\\frac{\\tan a+\\tan b}{1-\\tan a\\tan b}"],
+          ["\\tan(a-b)", "\\frac{\\tan a-\\tan b}{1+\\tan a\\tan b}"]
+        ]
+      },
+      {
+        id: 9,
+        name: "Cofunction Identities",
+        items: [
+          ["\\sin\\left(\\frac{\\pi}{2}-x\\right)", "\\cos x"],
+          ["\\cos\\left(\\frac{\\pi}{2}-x\\right)", "\\sin x"],
+          ["\\tan\\left(\\frac{\\pi}{2}-x\\right)", "\\cot x"],
+          ["\\sec\\left(\\frac{\\pi}{2}-x\\right)", "\\csc x"]
+        ]
+      },
+      {
+        id: 10,
+        name: "Core Seven - Highest Priority Review",
+        items: [
+          ["\\tan x", "\\frac{\\sin x}{\\cos x}"],
+          ["\\cot x", "\\frac{\\cos x}{\\sin x}"],
+          ["\\sec x", "\\frac{1}{\\cos x}"],
+          ["\\csc x", "\\frac{1}{\\sin x}"],
+          ["\\sin^2 x+\\cos^2 x", "1"],
+          ["1+\\tan^2 x", "\\sec^2 x"],
+          ["1+\\cot^2 x", "\\csc^2 x"]
+        ]
+      }
+    ];
+
+    const sectionSelect = document.getElementById("sectionSelect");
+    const directionSelect = document.getElementById("directionSelect");
+    const leftField = document.getElementById("leftField");
+    const rightField = document.getElementById("rightField");
+    const sectionChip = document.getElementById("sectionChip");
+    const directionChip = document.getElementById("directionChip");
+    const latexValue = document.getElementById("latexValue");
+    const feedback = document.getElementById("feedback");
+    const completedStat = document.getElementById("completedStat");
+    const correctStat = document.getElementById("correctStat");
+    const streakStat = document.getElementById("streakStat");
+
+    sectionSelect.innerHTML = `<option value="all">All sections</option>` +
+      sections.map(s => `<option value="${s.id}">${s.id}. ${s.name}</option>`).join("");
+
+    document.getElementById("sectionList").innerHTML = sections
+      .map(s => `<div><strong>${s.id}.</strong> ${s.name}</div>`)
+      .join("");
+
+    let current = null;
+    let completed = 0;
+    let correct = 0;
+    let streak = 0;
+    let finalized = false;
+    let lastKey = "";
+
+    function setStats(){
+      completedStat.textContent = completed;
+      correctStat.textContent = correct;
+      streakStat.textContent = streak;
+    }
+
+    function selectedPool(){
+      if(sectionSelect.value === "all"){
+        return sections.flatMap(section => section.items.map((item,index) => ({section,index,item})));
+      }
+      const section = sections.find(s => String(s.id) === sectionSelect.value);
+      return section.items.map((item,index) => ({section,index,item}));
+    }
+
+    function chooseDirection(){
+      const setting = directionSelect.value;
+      if(setting === "ltr" || setting === "rtl") return setting;
+      return Math.random() < 0.5 ? "ltr" : "rtl";
+    }
+
+    function pickQuestion(){
+      const pool = selectedPool();
+      const direction = chooseDirection();
+      let candidate;
+      let tries = 0;
+      do{
+        candidate = pool[Math.floor(Math.random() * pool.length)];
+        tries++;
+      }while(pool.length > 1 && `${candidate.section.id}-${candidate.index}-${direction}` === lastKey && tries < 20);
+      lastKey = `${candidate.section.id}-${candidate.index}-${direction}`;
+      return {...candidate, direction};
+    }
+
+    function configureField(field, value, editable){
+      field.value = value;
+      field.readOnly = !editable;
+      field.classList.toggle("known", !editable);
+      field.classList.toggle("answer", editable);
+      field.setAttribute("aria-readonly", editable ? "false" : "true");
+      if(editable){
+        field.value = "";
+        field.setAttribute("aria-label", "Type the missing side of the identity");
+      }
+    }
+
+    function answerField(){
+      return current.direction === "ltr" ? rightField : leftField;
+    }
+
+    function expectedLatex(){
+      return current.direction === "ltr" ? current.item[1] : current.item[0];
+    }
+
+    function newQuestion(){
+      current = pickQuestion();
+      finalized = false;
+      const [left,right] = current.item;
+      configureField(leftField, left, current.direction === "rtl");
+      configureField(rightField, right, current.direction === "ltr");
+      sectionChip.textContent = `Section ${current.section.id}: ${current.section.name}`;
+      directionChip.textContent = current.direction === "ltr" ? "Left → Right" : "Right → Left";
+      feedback.className = "feedback";
+      feedback.textContent = "Type the missing expression, then press Check Answer.";
+      latexValue.textContent = "(empty)";
+      answerField().focus();
+    }
+
+    function latexComparable(s){
+      return s
+        .replace(/\\left/g, "")
+        .replace(/\\right/g, "")
+        .replace(/\s+/g, "")
+        .replace(/\{x\}/g, "x");
+    }
+
+    function isCorrect(studentLatex, expected){
+      if(!studentLatex.trim()) return false;
+      try{
+        const studentExpr = ce.parse(studentLatex);
+        const expectedExpr = ce.parse(expected);
+        if(studentExpr && expectedExpr && studentExpr.isSame(expectedExpr)) return true;
+      }catch(err){
+        // Fall back to a light LaTeX normalization below.
+      }
+      return latexComparable(studentLatex) === latexComparable(expected);
+    }
+
+    function checkAnswer(){
+      if(finalized) return;
+      const field = answerField();
+      const student = field.value || "";
+      if(!student.trim()){
+        feedback.className = "feedback wrong";
+        feedback.textContent = "Enter an expression before checking.";
+        field.focus();
+        return;
+      }
+      if(isCorrect(student, expectedLatex())){
+        finalized = true;
+        completed++;
+        correct++;
+        streak++;
+        field.readOnly = true;
+        field.classList.remove("answer");
+        field.classList.add("known");
+        feedback.className = "feedback correct";
+        feedback.textContent = "✓ Correct. The missing side matches the memorized identity form.";
+        setStats();
+      }else{
+        streak = 0;
+        feedback.className = "feedback wrong";
+        feedback.textContent = "✕ Not yet. Check signs, reciprocals, exponents, and numerator/denominator placement, then try again.";
+        setStats();
+        field.focus();
+      }
+    }
+
+    function revealAnswer(){
+      if(finalized) return;
+      const field = answerField();
+      field.value = expectedLatex();
+      field.readOnly = true;
+      field.classList.remove("answer");
+      field.classList.add("known");
+      finalized = true;
+      completed++;
+      streak = 0;
+      latexValue.textContent = expectedLatex();
+      feedback.className = "feedback wrong";
+      feedback.textContent = "Answer revealed. Use Next Identity to continue.";
+      setStats();
+    }
+
+    function resetScore(){
+      completed = 0;
+      correct = 0;
+      streak = 0;
+      setStats();
+      newQuestion();
+    }
+
+    function updateLatex(){
+      const value = answerField().value || "";
+      latexValue.textContent = value || "(empty)";
+    }
+
+    document.getElementById("checkBtn").addEventListener("click", checkAnswer);
+    document.getElementById("revealBtn").addEventListener("click", revealAnswer);
+    document.getElementById("nextBtn").addEventListener("click", newQuestion);
+    document.getElementById("resetBtn").addEventListener("click", resetScore);
+    sectionSelect.addEventListener("change", newQuestion);
+    directionSelect.addEventListener("change", newQuestion);
+    leftField.addEventListener("input", updateLatex);
+    rightField.addEventListener("input", updateLatex);
+    leftField.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); checkAnswer(); }});
+    rightField.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); checkAnswer(); }});
+
+    setStats();
+    newQuestion();
+  </script>
+</body>
+</html>
