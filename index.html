@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculus I Trig Identity Drill</title>
+  <title>Calculus I Identities Drill</title>
   <style>
     :root{
       --bg:#f5f7fb;
@@ -30,6 +30,7 @@
     header{margin-bottom:18px}
     h1{font-size:clamp(1.8rem,3.5vw,2.7rem);margin:.1rem 0 .35rem;line-height:1.1}
     .subtitle{color:var(--muted);margin:0;max-width:850px;line-height:1.5}
+    .subtitle a{color:var(--accent);font-weight:700}
     .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px}
     .controls{display:grid;grid-template-columns:1.5fr 1fr auto;gap:12px;align-items:end;margin-bottom:18px}
     label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px}
@@ -82,8 +83,8 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>Calculus I Trig Identity Drill</h1>
-      <p class="subtitle">Complete each identity by typing the missing side in a real equation editor. Questions can run left-to-right or right-to-left. No multiple choice.</p>
+      <h1>Calculus I Identities Drill</h1>
+      <p class="subtitle">Complete each identity by typing the missing side in a real equation editor. <a href="https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/trig_identities_cheat_sheet.pdf" target="_blank" rel="noopener">Identity Equation Sheet PDF</a></p>
     </header>
 
     <main class="panel">
@@ -139,7 +140,7 @@
     </main>
 
     <footer>
-      Equation entry is provided by <a href="https://mathlive.io/" target="_blank" rel="noopener">MathLive</a>, with symbolic parsing by the <a href="https://cortexjs.io/compute-engine/" target="_blank" rel="noopener">CortexJS Compute Engine</a>. Both are MIT-licensed open-source projects. This single HTML file loads those libraries from a CDN, so an internet connection is needed when the page starts.
+      Equation entry is provided by <a href="https://mathlive.io/" target="_blank" rel="noopener">MathLive</a>, with symbolic parsing by the <a href="https://cortexjs.io/compute-engine/" target="_blank" rel="noopener">CortexJS Compute Engine</a>. Both are MIT-licensed open-source projects. This single HTML file loads those libraries from a CDN, so an internet connection is needed when the page starts. ©2026 Chris Athanas, link to source code on <a href="https://github.com/realityexpander/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign" target="_blank" rel="noopener">GitHub</a>.
     </footer>
   </div>
 
@@ -253,6 +254,47 @@
           ["\\sin^2 x+\\cos^2 x", "1"],
           ["1+\\tan^2 x", "\\sec^2 x"],
           ["1+\\cot^2 x", "\\csc^2 x"]
+        ]
+      },
+      {
+        id: 11,
+        name: "Calculus I Derivative Rules",
+        items: [
+          ["\\frac{d}{dx}\\left[c\\right]", "0"],
+          ["\\frac{d}{dx}\\left[x\\right]", "1"],
+          ["\\frac{d}{dx}\\left[c f(x)\\right]", "c f'(x)"],
+          ["\\frac{d}{dx}\\left[f(x)+g(x)\\right]", "f'(x)+g'(x)"],
+          ["\\frac{d}{dx}\\left[f(x)-g(x)\\right]", "f'(x)-g'(x)"],
+          ["\\frac{d}{dx}\\left[x^n\\right]", "n x^{n-1}"],
+          ["\\frac{d}{dx}\\left[u^n\\right]", "n u^{n-1}u'"],
+          ["\\frac{d}{dx}\\left[uv\\right]", "u'v+uv'"],
+          ["\\frac{d}{dx}\\left[\\frac{u}{v}\\right]", "\\frac{v u'-u v'}{v^2}"],
+          ["\\frac{d}{dx}\\left[f(g(x))\\right]", "f'(g(x))g'(x)"],
+          ["\\frac{d}{dx}\\left[\\frac{1}{x}\\right]", "-\\frac{1}{x^2}"],
+          ["\\frac{d}{dx}\\left[\\sqrt{x}\\right]", "\\frac{1}{2\\sqrt{x}}"],
+          ["\\frac{d}{dx}\\left[e^x\\right]", "e^x"],
+          ["\\frac{d}{dx}\\left[a^x\\right]", "a^x\\ln a"],
+          ["\\frac{d}{dx}\\left[\\ln x\\right]", "\\frac{1}{x}"],
+          ["\\frac{d}{dx}\\left[\\log_a x\\right]", "\\frac{1}{x\\ln a}"],
+          ["\\frac{d}{dx}\\left[\\sin x\\right]", "\\cos x"],
+          ["\\frac{d}{dx}\\left[\\cos x\\right]", "-\\sin x"],
+          ["\\frac{d}{dx}\\left[\\tan x\\right]", "\\sec^2 x"],
+          ["\\frac{d}{dx}\\left[\\cot x\\right]", "-\\csc^2 x"],
+          ["\\frac{d}{dx}\\left[\\sec x\\right]", "\\sec x\\tan x"],
+          ["\\frac{d}{dx}\\left[\\csc x\\right]", "-\\csc x\\cot x"],
+          ["\\frac{d}{dx}\\left[\\arcsin x\\right]", "\\frac{1}{\\sqrt{1-x^2}}"],
+          ["\\frac{d}{dx}\\left[\\arccos x\\right]", "-\\frac{1}{\\sqrt{1-x^2}}"],
+          ["\\frac{d}{dx}\\left[\\arctan x\\right]", "\\frac{1}{1+x^2}"],
+          ["\\frac{d}{dx}\\left[\\operatorname{arccot}x\\right]", "-\\frac{1}{1+x^2}"],
+          ["\\frac{d}{dx}\\left[\\operatorname{arcsec}x\\right]", "\\frac{1}{\\left|x\\right|\\sqrt{x^2-1}}"],
+          ["\\frac{d}{dx}\\left[\\operatorname{arccsc}x\\right]", "-\\frac{1}{\\left|x\\right|\\sqrt{x^2-1}}"],
+          ["\\frac{d}{dx}\\left[e^u\\right]", "e^u u'"],
+          ["\\frac{d}{dx}\\left[a^u\\right]", "a^u\\ln(a)u'"],
+          ["\\frac{d}{dx}\\left[\\ln\\left|u\\right|\\right]", "\\frac{u'}{u}"],
+          ["\\frac{d}{dx}\\left[\\log_a u\\right]", "\\frac{u'}{u\\ln a}"],
+          ["\\frac{d}{dx}\\left[f^{-1}(x)\\right]", "\\frac{1}{f'\\left(f^{-1}(x)\\right)}"],
+          ["\\frac{d}{dx}\\left[y\\right]", "y'"],
+          ["\\frac{d}{dx}\\left[u^v\\right]", "u^v\\left(v'\\ln u+v\\frac{u'}{u}\\right)"]
         ]
       }
     ];
