@@ -1,9 +1,8 @@
-# Calculus I Trig Identity Drill
+# Calculus I Identities & Rules Drill
 
 A single-page browser app for memorizing and practicing the trigonometric identities commonly used in **Calculus I**.
 
-<img width="690" alt="image" src="https://github.com/user-attachments/assets/988e1ac8-9334-428f-ae17-bf34a7d09f0d" />
-
+<img width="695" alt="image" src="https://github.com/user-attachments/assets/22e0d380-9f65-4487-8fa7-c4cff2ef71c6" />
 
 Link to live app: https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/
 
