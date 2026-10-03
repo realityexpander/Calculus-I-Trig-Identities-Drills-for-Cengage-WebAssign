@@ -2,6 +2,9 @@
 
 A single-page browser app for memorizing and practicing the trigonometric identities commonly used in **Calculus I**.
 
+<img width="629" height="1227" alt="image" src="https://github.com/user-attachments/assets/29313c3d-a4ce-4f4f-a1ac-8c3252056ce0" />
+
+
 Instead of multiple-choice questions, the app requires the user to **write the missing side of each identity in an equation editor**. Questions can be drilled left-to-right, right-to-left, or in both directions randomly.
 
 The app displays mathematical expressions in LaTeX-style notation and uses an interactive math input field for entering answers.
