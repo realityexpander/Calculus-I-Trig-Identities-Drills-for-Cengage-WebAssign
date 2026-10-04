@@ -476,6 +476,20 @@
     const directionSelect = document.getElementById("directionSelect");
     const leftField = document.getElementById("leftField");
     const rightField = document.getElementById("rightField");
+
+    // MathLive has a built-in inline shortcut "nu" -> Greek nu (\nu).
+    // In Calculus I derivative rules, n and u are commonly separate variables,
+    // so typing n followed by u must remain the literal variables "nu".
+    //
+    // Preserve all other MathLive shortcuts (sin, sqrt, pi, etc.) and override
+    // only the conflicting "nu" shortcut.
+    for (const field of [leftField, rightField]){
+      field.inlineShortcuts = {
+        ...field.inlineShortcuts,
+        nu: "nu"
+      };
+    }
+
     const sectionChip = document.getElementById("sectionChip");
     const directionChip = document.getElementById("directionChip");
     const latexValue = document.getElementById("latexValue");
