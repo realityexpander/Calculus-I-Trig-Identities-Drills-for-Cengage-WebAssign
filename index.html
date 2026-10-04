@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculus I Identities Drill</title>
+  <title>Calculus I Identities &amp; Rules Drill</title>
   <style>
     :root{
+      color-scheme:light;
       --bg:#f5f7fb;
+      --bg-top:#eef3fa;
       --panel:#ffffff;
       --ink:#182230;
       --muted:#5b6675;
@@ -15,33 +17,94 @@
       --accent-soft:#eaf1fb;
       --correct:#0b5fa5;
       --correct-bg:#e9f3ff;
+      --correct-line:#9cc7ef;
       --wrong:#9a4b00;
       --wrong-bg:#fff2df;
+      --wrong-line:#e8bb7a;
+      --control-bg:#ffffff;
+      --control-border:#aeb9c8;
+      --known-bg:#f4f7fb;
+      --known-border:#d4dce8;
+      --stat-bg:#f7f9fc;
+      --stat-line:#dde3eb;
+      --feedback-bg:#f8fafc;
+      --details-line:#e0e5ec;
+      --code-bg:#f3f5f8;
+      --code-line:#e1e5ea;
+      --switch-track:#c9d1dc;
+      --switch-knob:#ffffff;
       --shadow:0 14px 40px rgba(20,35,60,.10);
+    }
+
+    body[data-theme="dark"]{
+      color-scheme:dark;
+      --bg:#11161d;
+      --bg-top:#0c1117;
+      --panel:#171d25;
+      --ink:#edf2f7;
+      --muted:#a8b2bf;
+      --line:#364151;
+      --accent:#7fb3ff;
+      --accent-soft:#1c2d44;
+      --correct:#8ec5ff;
+      --correct-bg:#14283d;
+      --correct-line:#315a82;
+      --wrong:#ffbe76;
+      --wrong-bg:#362618;
+      --wrong-line:#80562d;
+      --control-bg:#121820;
+      --control-border:#536174;
+      --known-bg:#1b222c;
+      --known-border:#3c4858;
+      --stat-bg:#1a212a;
+      --stat-line:#34404f;
+      --feedback-bg:#151c24;
+      --details-line:#303a48;
+      --code-bg:#111821;
+      --code-line:#303a47;
+      --switch-track:#536174;
+      --switch-knob:#f4f7fb;
+      --shadow:0 14px 40px rgba(0,0,0,.28);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--ink);
-      background:linear-gradient(180deg,#eef3fa 0,var(--bg) 260px);
+      background:linear-gradient(180deg,var(--bg-top) 0,var(--bg) 260px);
     }
     .wrap{max-width:1040px;margin:0 auto;padding:28px 18px 48px}
     header{margin-bottom:18px}
     h1{font-size:clamp(1.8rem,3.5vw,2.7rem);margin:.1rem 0 .35rem;line-height:1.1}
     .subtitle{color:var(--muted);margin:0;max-width:850px;line-height:1.5}
     .subtitle a{color:var(--accent);font-weight:700}
+    .description-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+    .theme-control{display:flex;align-items:center;gap:7px;flex:0 0 auto;margin-top:1px;user-select:none}
+    .theme-icon{font-size:1.08rem;line-height:1;color:var(--muted)}
+    .theme-switch{position:relative;display:inline-block;width:48px;height:26px;margin:0}
+    .theme-switch input{position:absolute;opacity:0;width:1px;height:1px}
+    .theme-slider{
+      position:absolute;inset:0;border-radius:999px;background:var(--switch-track);
+      border:1px solid var(--control-border);cursor:pointer;transition:background .18s,border-color .18s
+    }
+    .theme-slider::before{
+      content:"";position:absolute;width:20px;height:20px;left:2px;top:2px;border-radius:50%;
+      background:var(--switch-knob);box-shadow:0 1px 4px rgba(0,0,0,.28);
+      transition:transform .18s
+    }
+    .theme-switch input:checked + .theme-slider::before{transform:translateX(22px)}
+    .theme-switch input:focus-visible + .theme-slider{outline:3px solid var(--accent);outline-offset:2px}
     .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px}
     .controls{display:grid;grid-template-columns:1.5fr 1fr auto;gap:12px;align-items:end;margin-bottom:18px}
     label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px}
     select,button{
-      font:inherit;border-radius:10px;border:1px solid #aeb9c8;background:#fff;color:var(--ink);min-height:44px
+      font:inherit;border-radius:10px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--ink);min-height:44px
     }
     select{width:100%;padding:0 12px}
     button{padding:0 16px;font-weight:750;cursor:pointer}
     button:hover{border-color:var(--accent)}
     button.primary{background:var(--accent);color:white;border-color:var(--accent)}
-    button.ghost{background:#f7f9fc}
+    button.ghost{background:var(--stat-bg)}
     button:disabled{opacity:.5;cursor:not-allowed}
     .meta{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
     .chip{font-size:.82rem;font-weight:750;background:var(--accent-soft);color:#234f86;border-radius:999px;padding:6px 10px}
@@ -49,29 +112,30 @@
     .equation-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:center;margin:8px 0 14px}
     .equals{font-family:Georgia,serif;font-size:2rem;font-weight:700;text-align:center}
     math-field{
-      width:100%;min-height:78px;font-size:clamp(1.35rem,3vw,2rem);border:2px solid var(--line);border-radius:14px;padding:12px;background:#fff;
-      --caret-color:var(--accent);
+      width:100%;min-height:78px;font-size:clamp(1.35rem,3vw,2rem);border:2px solid var(--line);border-radius:14px;padding:12px;background:var(--control-bg);color:var(--ink);\n      --caret-color:var(--accent);
       --selection-background-color:#d8e8ff;
       --contains-highlight-background-color:#eaf1fb;
     }
-    math-field.known{background:#f4f7fb;border-color:#d4dce8}
+    math-field.known{background:var(--known-bg);border-color:var(--known-border)}
     math-field.answer{border-color:#7fa6d6;box-shadow:0 0 0 3px rgba(36,93,168,.08)}
     .latex-line{font-size:.86rem;color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}
-    .latex-line code{background:#f3f5f8;border:1px solid #e1e5ea;border-radius:6px;padding:2px 5px}
+    .latex-line code{background:var(--code-bg);border:1px solid var(--code-line);border-radius:6px;padding:2px 5px}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .feedback{margin-top:14px;border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:#f8fafc;min-height:50px;display:flex;align-items:center;font-weight:700}
-    .feedback.correct{color:var(--correct);background:var(--correct-bg);border-color:#9cc7ef}
-    .feedback.wrong{color:var(--wrong);background:var(--wrong-bg);border-color:#e8bb7a}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-    .stat{background:#f7f9fc;border:1px solid #dde3eb;border-radius:12px;padding:12px;text-align:center}
+    .feedback{margin-top:14px;border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:var(--feedback-bg);min-height:50px;display:flex;align-items:center;font-weight:700}
+    .feedback.correct{color:var(--correct);background:var(--correct-bg);border-color:var(--correct-line)}
+    .feedback.wrong{color:var(--wrong);background:var(--wrong-bg);border-color:var(--wrong-line)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+    .stat{background:var(--stat-bg);border:1px solid var(--stat-line);border-radius:12px;padding:12px;text-align:center}
     .stat strong{display:block;font-size:1.35rem}
     .stat span{color:var(--muted);font-size:.82rem}
-    details{margin-top:18px;border-top:1px solid #e0e5ec;padding-top:14px}
+    details{margin-top:18px;border-top:1px solid var(--details-line);padding-top:14px}
     summary{cursor:pointer;font-weight:800}
     .section-list{columns:2;column-gap:28px;margin-top:8px;color:#39485b;font-size:.92rem;line-height:1.5}
     footer{color:var(--muted);font-size:.82rem;margin-top:16px;line-height:1.5}
     footer a{color:var(--accent)}
     @media(max-width:720px){
+      .description-row{align-items:flex-start;gap:12px}
+      .theme-control{margin-top:0}
       .controls{grid-template-columns:1fr}
       .equation-row{grid-template-columns:1fr;gap:8px}
       .equals{font-size:1.5rem}
@@ -83,8 +147,18 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>Calculus I Identities Drill</h1>
-      <p class="subtitle">Complete each identity by typing the missing side in a real equation editor. <a href="https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/trig_identities_cheat_sheet.pdf" target="_blank" rel="noopener">Identity Equation Sheet PDF</a></p>
+      <h1>Calculus I Identities &amp; Rules Drill</h1>
+      <div class="description-row">
+        <p class="subtitle">Complete each identity by typing the missing side in a real equation editor. <a href="https://realityexpander.github.io/Calculus-I-Trig-Identities-Drills-for-Cengage-WebAssign/trig_identities_cheat_sheet.pdf" target="_blank" rel="noopener">Identity Equation Sheet PDF</a></p>
+        <div class="theme-control" aria-label="Light or dark mode">
+          <span class="theme-icon" aria-hidden="true">☀︎</span>
+          <label class="theme-switch" title="Switch between light and dark mode">
+            <input id="themeToggle" type="checkbox" role="switch" aria-label="Dark mode" />
+            <span class="theme-slider" aria-hidden="true"></span>
+          </label>
+          <span class="theme-icon" aria-hidden="true">☾</span>
+        </div>
+      </div>
     </header>
 
     <main class="panel">
@@ -130,6 +204,7 @@
       <div class="stats" aria-label="Drill statistics">
         <div class="stat"><strong id="completedStat">0</strong><span>Completed</span></div>
         <div class="stat"><strong id="correctStat">0</strong><span>Correct</span></div>
+        <div class="stat"><strong id="percentageStat">0%</strong><span>Percentage correct</span></div>
         <div class="stat"><strong id="streakStat">0</strong><span>Current streak</span></div>
       </div>
 
@@ -309,7 +384,38 @@
     const feedback = document.getElementById("feedback");
     const completedStat = document.getElementById("completedStat");
     const correctStat = document.getElementById("correctStat");
+    const percentageStat = document.getElementById("percentageStat");
     const streakStat = document.getElementById("streakStat");
+    const checkBtn = document.getElementById("checkBtn");
+    const revealBtn = document.getElementById("revealBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const themeToggle = document.getElementById("themeToggle");
+
+    const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    let themeManuallySet = false;
+
+    function applyTheme(isDark){
+      document.body.dataset.theme = isDark ? "dark" : "light";
+      themeToggle.checked = isDark;
+      themeToggle.setAttribute("aria-checked", String(isDark));
+    }
+
+    // Start with the operating system/browser color-scheme preference.
+    applyTheme(systemDarkQuery.matches);
+
+    themeToggle.addEventListener("change", () => {
+      themeManuallySet = true;
+      applyTheme(themeToggle.checked);
+    });
+
+    // Continue following system changes until the user manually flips the switch.
+    systemDarkQuery.addEventListener?.("change", event => {
+      if(!themeManuallySet) applyTheme(event.matches);
+    });
+
+    const isMac = /Macintosh|Mac OS X|MacIntel/.test(navigator.userAgent + " " + navigator.platform);
+    revealBtn.textContent = isMac ? "Reveal ⌥R" : "Reveal alt-R";
+    nextBtn.textContent = isMac ? "Next Identity ⌥N" : "Next Identity alt-N";
 
     sectionSelect.innerHTML = `<option value="all">All sections</option>` +
       sections.map(s => `<option value="${s.id}">${s.id}. ${s.name}</option>`).join("");
@@ -328,7 +434,14 @@
     function setStats(){
       completedStat.textContent = completed;
       correctStat.textContent = correct;
+      const pct = completed === 0 ? 0 : Math.round((correct / completed) * 100);
+      percentageStat.textContent = `${pct}%`;
       streakStat.textContent = streak;
+    }
+
+    function highlightAction(action){
+      checkBtn.classList.toggle("primary", action === "check");
+      nextBtn.classList.toggle("primary", action === "next");
     }
 
     function selectedPool(){
@@ -389,26 +502,194 @@
       feedback.className = "feedback";
       feedback.textContent = "Type the missing expression, then press Check Answer.";
       latexValue.textContent = "(empty)";
+      highlightAction("check");
       answerField().focus();
     }
 
-    function latexComparable(s){
+    function stripRedundantOuterGrouping(s){
+      let value = s;
+
+      function wrapsWholeExpression(text, open, close){
+        if(text.length < 2 || text[0] !== open || text[text.length - 1] !== close) return false;
+
+        const pairs = {"(":")", "[":"]", "{":"}"};
+        const stack = [];
+
+        for(let i = 0; i < text.length; i++){
+          const ch = text[i];
+
+          if(ch === "(" || ch === "[" || ch === "{"){
+            stack.push(ch);
+          }else if(ch === ")" || ch === "]" || ch === "}"){
+            if(!stack.length || pairs[stack[stack.length - 1]] !== ch) return false;
+            stack.pop();
+
+            // The original opening delimiter closed before the end,
+            // so it does not wrap the whole expression.
+            if(stack.length === 0 && i !== text.length - 1) return false;
+          }
+        }
+
+        return stack.length === 0;
+      }
+
+      let changed = true;
+      while(changed){
+        changed = false;
+
+        if(wrapsWholeExpression(value, "(", ")") ||
+           wrapsWholeExpression(value, "[", "]")){
+          value = value.slice(1, -1);
+          changed = true;
+        }
+      }
+
+      return value;
+    }
+
+    function normalizeAbsoluteValueBars(s){
       return s
+        .replace(/\\lvert/g, "|")
+        .replace(/\\rvert/g, "|")
+        .replace(/\\vert/g, "|")
+        .replace(/\\mid/g, "|");
+    }
+
+    function normalizeLogBaseBraces(s){
+      // MathLive may emit \log_{a}; the question bank currently uses \log_a.
+      // For a simple base, those are the same notation.
+      return s.replace(/\\log_\{([A-Za-z0-9]+)\}/g, "\\log_$1");
+    }
+
+    function normalizeOptionalFunctionGrouping(s){
+      // Parentheses or square brackets around a single unambiguous function
+      // argument are optional:
+      //
+      // sec(x)   = sec[x]   = sec x
+      // ln(|u|)  = ln[|u|]  = ln|u|
+      // log_a(u) = log_a[u] = log_a u
+      //
+      // Keep grouping when the argument contains a top-level +, -, comma, or =
+      // because removing it could change meaning:
+      // sin(a+b) must NOT become sin a+b.
+      const names =
+        "(sin|cos|tan|sec|csc|cot|arcsin|arccos|arctan|arccot|arcsec|arccsc|ln|log(?:_[A-Za-z0-9]+)?)";
+      const parenPattern = new RegExp("\\\\" + names + "\\(([^()]*)\\)", "g");
+      const bracketPattern = new RegExp("\\\\" + names + "\\[([^\\[\\]]*)\\]", "g");
+
+      function simplify(match, fn, arg){
+        let depth = 0;
+
+        for(let i = 0; i < arg.length; i++){
+          const ch = arg[i];
+
+          if(ch === "(" || ch === "[" || ch === "{") depth++;
+          else if(ch === ")" || ch === "]" || ch === "}") depth--;
+          else if(depth === 0 && (ch === "+" || ch === "," || ch === "=")) return match;
+          else if(depth === 0 && ch === "-" && i > 0) return match;
+        }
+
+        return `\\${fn}${arg}`;
+      }
+
+      let previous;
+      let value = s;
+
+      do{
+        previous = value;
+        value = value.replace(parenPattern, simplify);
+        value = value.replace(bracketPattern, simplify);
+      }while(value !== previous);
+
+      return value;
+    }
+
+    function normalizeDerivativeOperator(s){
+      let value = s;
+
+      // Normalize common d/dx forms to one canonical derivative operator.
+      value = value
+        .replace(/^d\/dx/, "\\frac{d}{dx}")
+        .replace(/^\\frac\{\\mathrm\{d\}\}\{\\mathrm\{d\}x\}/, "\\frac{d}{dx}")
+        .replace(/^\\frac\{\\operatorname\{d\}\}\{\\operatorname\{d\}x\}/, "\\frac{d}{dx}");
+
+      return value;
+    }
+
+    function latexComparable(s){
+      let value = s
+        // Presentation-only LaTeX should not affect equivalence.
         .replace(/\\left/g, "")
         .replace(/\\right/g, "")
+        .replace(/\\bigl|\\bigr|\\Bigl|\\Bigr|\\biggl|\\biggr|\\Biggl|\\Biggr/g, "")
+        .replace(/\\,/g, "")
+        .replace(/\\;/g, "")
+        .replace(/\\:/g, "")
+        .replace(/\\!/g, "")
+        .replace(/\\quad/g, "")
+        .replace(/\\qquad/g, "")
+        // Ordinary spaces are always ignored.
         .replace(/\s+/g, "")
-        .replace(/\{x\}/g, "x");
+        .replace(/\{x\}/g, "x")
+        .replace(/\\mathrm\{d\}/g, "d")
+        .replace(/\\operatorname\{d\}/g, "d");
+
+      value = normalizeAbsoluteValueBars(value);
+      value = normalizeLogBaseBraces(value);
+
+      // Standardize inverse-trig names that MathLive may represent with
+      // \operatorname{...} or \mathrm{...}.
+      value = value
+        .replace(/\\operatorname\{(arccot|arcsec|arccsc)\}/g, "\\$1")
+        .replace(/\\mathrm\{(arccot|arcsec|arccsc)\}/g, "\\$1");
+
+      value = normalizeDerivativeOperator(value);
+
+      // Redundant grouping around the complete answer is optional.
+      value = stripRedundantOuterGrouping(value);
+
+      const derivativeOp = "\\frac{d}{dx}";
+
+      if(value.startsWith(derivativeOp)){
+        let operand = value.slice(derivativeOp.length);
+
+        // These are all equivalent when the grouping encloses exactly the
+        // expression being differentiated:
+        //
+        // d/dx ln|u|
+        // d/dx [ln|u|]
+        // d/dx (ln|u|)
+        // d/dx ( ln|u| )
+        // d/dx [ ln|u| ]
+        operand = stripRedundantOuterGrouping(operand);
+        operand = normalizeAbsoluteValueBars(operand);
+        operand = normalizeLogBaseBraces(operand);
+        operand = normalizeOptionalFunctionGrouping(operand);
+
+        value = derivativeOp + operand;
+      }else{
+        value = normalizeOptionalFunctionGrouping(value);
+      }
+
+      return value;
     }
 
     function isCorrect(studentLatex, expected){
       if(!studentLatex.trim()) return false;
+
+      // Let the Compute Engine accept mathematically identical expressions
+      // whenever both sides are ordinary symbolic expressions.
       try{
         const studentExpr = ce.parse(studentLatex);
         const expectedExpr = ce.parse(expected);
         if(studentExpr && expectedExpr && studentExpr.isSame(expectedExpr)) return true;
       }catch(err){
-        // Fall back to a light LaTeX normalization below.
+        // Derivative notation and some layout forms may not parse symbolically.
       }
+
+      // For memorized identity/rule notation, compare normalized forms.
+      // This ignores spaces and harmless optional grouping without deleting
+      // parentheses that are mathematically significant.
       return latexComparable(studentLatex) === latexComparable(expected);
     }
 
@@ -431,12 +712,14 @@
         field.classList.remove("answer");
         field.classList.add("known");
         feedback.className = "feedback correct";
-        feedback.textContent = "✓ Correct. The missing side matches the memorized identity form.";
+        feedback.textContent = "✓ Correct. Press Enter or use Next Identity to continue.";
         setStats();
+        highlightAction("next");
+        nextBtn.focus();
       }else{
         streak = 0;
         feedback.className = "feedback wrong";
-        feedback.textContent = "✕ Not yet. Check signs, reciprocals, exponents, and numerator/denominator placement, then try again.";
+        feedback.textContent = "✕ Not yet. Spaces and harmless outer brackets/parentheses are ignored. Check signs, functions, exponents, and numerator/denominator placement, then try again.";
         setStats();
         field.focus();
       }
@@ -454,8 +737,10 @@
       streak = 0;
       latexValue.textContent = expectedLatex();
       feedback.className = "feedback wrong";
-      feedback.textContent = "Answer revealed. Use Next Identity to continue.";
+      feedback.textContent = "Answer revealed. Press Enter or use Next Identity to continue.";
       setStats();
+      highlightAction("next");
+      nextBtn.focus();
     }
 
     function resetScore(){
@@ -471,16 +756,41 @@
       latexValue.textContent = value || "(empty)";
     }
 
-    document.getElementById("checkBtn").addEventListener("click", checkAnswer);
-    document.getElementById("revealBtn").addEventListener("click", revealAnswer);
-    document.getElementById("nextBtn").addEventListener("click", newQuestion);
+    checkBtn.addEventListener("click", checkAnswer);
+    revealBtn.addEventListener("click", revealAnswer);
+    nextBtn.addEventListener("click", newQuestion);
     document.getElementById("resetBtn").addEventListener("click", resetScore);
     sectionSelect.addEventListener("change", newQuestion);
     directionSelect.addEventListener("change", newQuestion);
     leftField.addEventListener("input", updateLatex);
     rightField.addEventListener("input", updateLatex);
-    leftField.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); checkAnswer(); }});
-    rightField.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); checkAnswer(); }});
+    function handleAnswerEnter(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      if(finalized) newQuestion();
+      else checkAnswer();
+    }
+
+    leftField.addEventListener("keydown", handleAnswerEnter);
+    rightField.addEventListener("keydown", handleAnswerEnter);
+
+    document.addEventListener("keydown", e => {
+      if(e.key === "Enter" && finalized && document.activeElement !== nextBtn){
+        e.preventDefault();
+        newQuestion();
+        return;
+      }
+
+      if(!e.altKey) return;
+
+      if(e.code === "KeyR"){
+        e.preventDefault();
+        if(!finalized) revealAnswer();
+      }else if(e.code === "KeyN"){
+        e.preventDefault();
+        newQuestion();
+      }
+    });
 
     setStats();
     newQuestion();
