@@ -394,8 +394,8 @@
         ]
       },
       {
-        id: 11,
-        name: "Calculus I Derivative Rules",
+        id: "11.1",
+        name: "Basic / Linearity / Power Rules",
         items: [
           ["\\frac{d}{dx}\\left[c\\right]", "0"],
           ["\\frac{d}{dx}\\left[x\\right]", "1"],
@@ -403,32 +403,68 @@
           ["\\frac{d}{dx}\\left[f(x)+g(x)\\right]", "f'(x)+g'(x)"],
           ["\\frac{d}{dx}\\left[f(x)-g(x)\\right]", "f'(x)-g'(x)"],
           ["\\frac{d}{dx}\\left[x^n\\right]", "n x^{n-1}"],
-          ["\\frac{d}{dx}\\left[u^n\\right]", "n u^{n-1}u'"],
+          ["\\frac{d}{dx}\\left[u^n\\right]", "n u^{n-1}u'"]
+        ]
+      },
+      {
+        id: "11.2",
+        name: "Product / Quotient / Chain",
+        items: [
           ["\\frac{d}{dx}\\left[uv\\right]", "u'v+uv'"],
           ["\\frac{d}{dx}\\left[\\frac{u}{v}\\right]", "\\frac{v u'-u v'}{v^2}"],
-          ["\\frac{d}{dx}\\left[f(g(x))\\right]", "f'(g(x))g'(x)"],
+          ["\\frac{d}{dx}\\left[f(g(x))\\right]", "f'(g(x))g'(x)"]
+        ]
+      },
+      {
+        id: "11.3",
+        name: "Reciprocal / Root Special Cases",
+        items: [
           ["\\frac{d}{dx}\\left[\\frac{1}{x}\\right]", "-\\frac{1}{x^2}"],
-          ["\\frac{d}{dx}\\left[\\sqrt{x}\\right]", "\\frac{1}{2\\sqrt{x}}"],
+          ["\\frac{d}{dx}\\left[\\sqrt{x}\\right]", "\\frac{1}{2\\sqrt{x}}"]
+        ]
+      },
+      {
+        id: "11.4",
+        name: "Exponential / Logarithm Rules",
+        items: [
           ["\\frac{d}{dx}\\left[e^x\\right]", "e^x"],
           ["\\frac{d}{dx}\\left[a^x\\right]", "a^x\\ln a"],
           ["\\frac{d}{dx}\\left[\\ln x\\right]", "\\frac{1}{x}"],
           ["\\frac{d}{dx}\\left[\\log_a x\\right]", "\\frac{1}{x\\ln a}"],
+          ["\\frac{d}{dx}\\left[e^u\\right]", "e^u u'"],
+          ["\\frac{d}{dx}\\left[a^u\\right]", "a^u\\ln(a)u'"],
+          ["\\frac{d}{dx}\\left[\\ln\\left|u\\right|\\right]", "\\frac{u'}{u}"],
+          ["\\frac{d}{dx}\\left[\\log_a u\\right]", "\\frac{u'}{u\\ln a}"]
+        ]
+      },
+      {
+        id: "11.5",
+        name: "Trigonometric Derivatives",
+        items: [
           ["\\frac{d}{dx}\\left[\\sin x\\right]", "\\cos x"],
           ["\\frac{d}{dx}\\left[\\cos x\\right]", "-\\sin x"],
           ["\\frac{d}{dx}\\left[\\tan x\\right]", "\\sec^2 x"],
           ["\\frac{d}{dx}\\left[\\cot x\\right]", "-\\csc^2 x"],
           ["\\frac{d}{dx}\\left[\\sec x\\right]", "\\sec x\\tan x"],
-          ["\\frac{d}{dx}\\left[\\csc x\\right]", "-\\csc x\\cot x"],
+          ["\\frac{d}{dx}\\left[\\csc x\\right]", "-\\csc x\\cot x"]
+        ]
+      },
+      {
+        id: "11.6",
+        name: "Inverse Trigonometric Derivatives",
+        items: [
           ["\\frac{d}{dx}\\left[\\arcsin x\\right]", "\\frac{1}{\\sqrt{1-x^2}}"],
           ["\\frac{d}{dx}\\left[\\arccos x\\right]", "-\\frac{1}{\\sqrt{1-x^2}}"],
           ["\\frac{d}{dx}\\left[\\arctan x\\right]", "\\frac{1}{1+x^2}"],
           ["\\frac{d}{dx}\\left[\\operatorname{arccot}x\\right]", "-\\frac{1}{1+x^2}"],
           ["\\frac{d}{dx}\\left[\\operatorname{arcsec}x\\right]", "\\frac{1}{\\left|x\\right|\\sqrt{x^2-1}}"],
-          ["\\frac{d}{dx}\\left[\\operatorname{arccsc}x\\right]", "-\\frac{1}{\\left|x\\right|\\sqrt{x^2-1}}"],
-          ["\\frac{d}{dx}\\left[e^u\\right]", "e^u u'"],
-          ["\\frac{d}{dx}\\left[a^u\\right]", "a^u\\ln(a)u'"],
-          ["\\frac{d}{dx}\\left[\\ln\\left|u\\right|\\right]", "\\frac{u'}{u}"],
-          ["\\frac{d}{dx}\\left[\\log_a u\\right]", "\\frac{u'}{u\\ln a}"],
+          ["\\frac{d}{dx}\\left[\\operatorname{arccsc}x\\right]", "-\\frac{1}{\\left|x\\right|\\sqrt{x^2-1}}"]
+        ]
+      },
+      {
+        id: "11.7",
+        name: "Other Important Calculus I Rules",
+        items: [
           ["\\frac{d}{dx}\\left[f^{-1}(x)\\right]", "\\frac{1}{f'\\left(f^{-1}(x)\\right)}"],
           ["\\frac{d}{dx}\\left[y\\right]", "y'"],
           ["\\frac{d}{dx}\\left[u^v\\right]", "u^v\\left(v'\\ln u+v\\frac{u'}{u}\\right)"]
