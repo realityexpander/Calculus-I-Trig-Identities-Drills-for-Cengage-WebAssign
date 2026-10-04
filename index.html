@@ -604,15 +604,15 @@
       answerField().focus();
     }
 
-    function stripRedundantOuterGrouping(s){
+    function stripRedundantOuterGrouping(s, allowBraces = false){
       let value = s;
+
+      const pairs = {"(":")", "[":"]", "{":"}"};
 
       function wrapsWholeExpression(text, open, close){
         if(text.length < 2 || text[0] !== open || text[text.length - 1] !== close) return false;
 
-        const pairs = {"(":")", "[":"]", "{":"}"};
         const stack = [];
-
         for(let i = 0; i < text.length; i++){
           const ch = text[i];
 
@@ -622,8 +622,8 @@
             if(!stack.length || pairs[stack[stack.length - 1]] !== ch) return false;
             stack.pop();
 
-            // The original opening delimiter closed before the end,
-            // so it does not wrap the whole expression.
+            // The outermost group closed before the end, so it does not
+            // wrap the complete expression.
             if(stack.length === 0 && i !== text.length - 1) return false;
           }
         }
@@ -636,13 +636,53 @@
         changed = false;
 
         if(wrapsWholeExpression(value, "(", ")") ||
-           wrapsWholeExpression(value, "[", "]")){
+           wrapsWholeExpression(value, "[", "]") ||
+           (allowBraces && wrapsWholeExpression(value, "{", "}"))){
           value = value.slice(1, -1);
           changed = true;
         }
       }
 
       return value;
+    }
+
+    function basicLatexCleanup(s){
+      return s
+        // Presentation-only sizing/grouping commands.
+        .replace(/\\left/g, "")
+        .replace(/\\right/g, "")
+        .replace(/\\bigl|\\bigr|\\Bigl|\\Bigr|\\biggl|\\biggr|\\Biggl|\\Biggr/g, "")
+        .replace(/\\lbrack/g, "[")
+        .replace(/\\rbrack/g, "]")
+        // Spacing commands and ordinary spaces never affect an answer here.
+        .replace(/\\,/g, "")
+        .replace(/\\;/g, "")
+        .replace(/\\:/g, "")
+        .replace(/\\!/g, "")
+        .replace(/\\quad/g, "")
+        .replace(/\\qquad/g, "")
+        .replace(/~/g, "")
+        .replace(/\s+/g, "")
+        // Common MathLive variants. In particular, MathLive can emit
+        // \\differentialD for the denominator d in a typed d/dx expression,
+        // e.g. \\frac{d}{\\differentialD x}c.
+        .replace(/\\dfrac/g, "\\frac")
+        .replace(/\\tfrac/g, "\\frac")
+        .replace(/\\mathrm\{d\}/g, "d")
+        .replace(/\\operatorname\{d\}/g, "d")
+        .replace(/\\text\{d\}/g, "d")
+        .replace(/\\differentialD/g, "d")
+        .replace(/\\mathrm d/g, "d")
+        .replace(/\\operatorname d/g, "d")
+        .replace(/\{x\}/g, "x")
+        // MathLive commonly emits braces around a single exponent/subscript
+        // symbol even when the question bank does not: x^{n} vs x^n.
+        // Removing braces around ONE atomic symbol is mathematically safe.
+        .replace(/\^\{([A-Za-z0-9])\}/g, "^$1")
+        .replace(/_\{([A-Za-z0-9])\}/g, "_$1")
+        // MathLive may encode a typed prime as ^{\prime}.
+        .replace(/\^\{\\prime\}/g, "'")
+        .replace(/\^\{\\prime\\prime\}/g, "''");
     }
 
     function normalizeAbsoluteValueBars(s){
@@ -654,9 +694,14 @@
     }
 
     function normalizeLogBaseBraces(s){
-      // MathLive may emit \log_{a}; the question bank currently uses \log_a.
-      // For a simple base, those are the same notation.
+      // MathLive may emit \log_{a}; the question bank uses \log_a.
       return s.replace(/\\log_\{([A-Za-z0-9]+)\}/g, "\\log_$1");
+    }
+
+    function normalizeNamedFunctions(s){
+      return s
+        .replace(/\\operatorname\{(arccot|arcsec|arccsc)\}/g, "\\$1")
+        .replace(/\\mathrm\{(arccot|arcsec|arccsc)\}/g, "\\$1");
     }
 
     function normalizeOptionalFunctionGrouping(s){
@@ -667,8 +712,7 @@
       // ln(|u|)  = ln[|u|]  = ln|u|
       // log_a(u) = log_a[u] = log_a u
       //
-      // Keep grouping when the argument contains a top-level +, -, comma, or =
-      // because removing it could change meaning:
+      // Keep grouping when removing it could change meaning:
       // sin(a+b) must NOT become sin a+b.
       const names =
         "(sin|cos|tan|sec|csc|cot|arcsin|arccos|arctan|arccot|arcsec|arccsc|ln|log(?:_[A-Za-z0-9]+)?)";
@@ -702,72 +746,76 @@
       return value;
     }
 
-    function normalizeDerivativeOperator(s){
-      let value = s;
+    function normalizeOperand(operand){
+      let value = basicLatexCleanup(operand);
+      value = normalizeAbsoluteValueBars(value);
+      value = normalizeLogBaseBraces(value);
+      value = normalizeNamedFunctions(value);
 
-      // Normalize common d/dx forms to one canonical derivative operator.
-      value = value
-        .replace(/^d\/dx/, "\\frac{d}{dx}")
-        .replace(/^\\frac\{\\mathrm\{d\}\}\{\\mathrm\{d\}x\}/, "\\frac{d}{dx}")
-        .replace(/^\\frac\{\\operatorname\{d\}\}\{\\operatorname\{d\}x\}/, "\\frac{d}{dx}");
+      // [expr], (expr), {expr}, and no group are equivalent when the group
+      // encloses the complete operand of d/dx.
+      value = stripRedundantOuterGrouping(value, true);
+
+      // Normalize harmless optional parentheses on trig/log functions.
+      value = normalizeOptionalFunctionGrouping(value);
 
       return value;
     }
 
-    function latexComparable(s){
-      let value = s
-        // Presentation-only LaTeX should not affect equivalence.
-        .replace(/\\left/g, "")
-        .replace(/\\right/g, "")
-        .replace(/\\bigl|\\bigr|\\Bigl|\\Bigr|\\biggl|\\biggr|\\Biggl|\\Biggr/g, "")
-        .replace(/\\,/g, "")
-        .replace(/\\;/g, "")
-        .replace(/\\:/g, "")
-        .replace(/\\!/g, "")
-        .replace(/\\quad/g, "")
-        .replace(/\\qquad/g, "")
-        // Ordinary spaces are always ignored.
-        .replace(/\s+/g, "")
-        .replace(/\{x\}/g, "x")
-        .replace(/\\mathrm\{d\}/g, "d")
-        .replace(/\\operatorname\{d\}/g, "d");
-
+    function canonicalDerivativeForm(s){
+      let value = basicLatexCleanup(s);
       value = normalizeAbsoluteValueBars(value);
       value = normalizeLogBaseBraces(value);
+      value = normalizeNamedFunctions(value);
+      value = stripRedundantOuterGrouping(value, true);
 
-      // Standardize inverse-trig names that MathLive may represent with
-      // \operatorname{...} or \mathrm{...}.
-      value = value
-        .replace(/\\operatorname\{(arccot|arcsec|arccsc)\}/g, "\\$1")
-        .replace(/\\mathrm\{(arccot|arcsec|arccsc)\}/g, "\\$1");
+      // Literal keyboard form: d/dx c, d/dx[c], d/dx(c), etc.
+      if(value.startsWith("d/dx")){
+        return "D:" + normalizeOperand(value.slice(4));
+      }
 
-      value = normalizeDerivativeOperator(value);
+      // Standard MathLive derivative operator:
+      // \frac{d}{dx}c
+      // \frac{d}{dx}[c]
+      // \frac{d}{dx}(c)
+      const derivativeOp = "\\frac{d}{dx}";
+      if(value.startsWith(derivativeOp)){
+        return "D:" + normalizeOperand(value.slice(derivativeOp.length));
+      }
+
+      // When a user types with the slash key, MathLive can sometimes extend
+      // the denominator through the following operand. Interpret forms such as
+      //
+      //   \frac{d}{dxc}
+      //   \frac{d}{dx[c]}
+      //   \frac{d}{dx(\ln|u|)}
+      //
+      // as d/dx applied to c, [c], or (ln|u|). This is only used while
+      // comparing derivative-rule notation.
+      const swallowed = value.match(/^\\frac\{d\}\{dx(.+)\}$/);
+      if(swallowed){
+        return "D:" + normalizeOperand(swallowed[1]);
+      }
+
+      // A few equation editors can leave an extra brace group after dx
+      // inside the denominator. Accept that form as well.
+      const swallowedBraced = value.match(/^\\frac\{d\}\{dx\{(.+)\}\}$/);
+      if(swallowedBraced){
+        return "D:" + normalizeOperand(swallowedBraced[1]);
+      }
+
+      return null;
+    }
+
+    function latexComparable(s){
+      let value = basicLatexCleanup(s);
+      value = normalizeAbsoluteValueBars(value);
+      value = normalizeLogBaseBraces(value);
+      value = normalizeNamedFunctions(value);
 
       // Redundant grouping around the complete answer is optional.
-      value = stripRedundantOuterGrouping(value);
-
-      const derivativeOp = "\\frac{d}{dx}";
-
-      if(value.startsWith(derivativeOp)){
-        let operand = value.slice(derivativeOp.length);
-
-        // These are all equivalent when the grouping encloses exactly the
-        // expression being differentiated:
-        //
-        // d/dx ln|u|
-        // d/dx [ln|u|]
-        // d/dx (ln|u|)
-        // d/dx ( ln|u| )
-        // d/dx [ ln|u| ]
-        operand = stripRedundantOuterGrouping(operand);
-        operand = normalizeAbsoluteValueBars(operand);
-        operand = normalizeLogBaseBraces(operand);
-        operand = normalizeOptionalFunctionGrouping(operand);
-
-        value = derivativeOp + operand;
-      }else{
-        value = normalizeOptionalFunctionGrouping(value);
-      }
+      value = stripRedundantOuterGrouping(value, true);
+      value = normalizeOptionalFunctionGrouping(value);
 
       return value;
     }
@@ -775,8 +823,37 @@
     function isCorrect(studentLatex, expected){
       if(!studentLatex.trim()) return false;
 
-      // Let the Compute Engine accept mathematically identical expressions
-      // whenever both sides are ordinary symbolic expressions.
+      // All Section 11 left-hand derivative prompts use the same canonical
+      // d/dx notation. Compare derivative forms separately so spaces and
+      // harmless [ ], ( ), or outer brace groups cannot cause a false wrong.
+      const expectedDerivative = canonicalDerivativeForm(expected);
+      if(expectedDerivative !== null){
+        const studentDerivative = canonicalDerivativeForm(studentLatex);
+
+        if(studentDerivative !== null){
+          // First compare the fully normalized derivative notation.
+          if(studentDerivative === expectedDerivative) return true;
+
+          // Then compare only the derivative operands symbolically. This
+          // catches harmless MathLive representation differences such as
+          // x^n vs x^{n}, while still requiring d/dx on both answers.
+          try{
+            const studentOperand = studentDerivative.slice(2);
+            const expectedOperand = expectedDerivative.slice(2);
+            const studentExpr = ce.parse(studentOperand);
+            const expectedExpr = ce.parse(expectedOperand);
+
+            if(studentExpr && expectedExpr && studentExpr.isSame(expectedExpr)){
+              return true;
+            }
+          }catch(err){
+            // Fall through to the ordinary checks below.
+          }
+        }
+      }
+
+      // Let the Compute Engine accept mathematically identical ordinary
+      // expressions on the right-hand side whenever possible.
       try{
         const studentExpr = ce.parse(studentLatex);
         const expectedExpr = ce.parse(expected);
@@ -785,9 +862,8 @@
         // Derivative notation and some layout forms may not parse symbolically.
       }
 
-      // For memorized identity/rule notation, compare normalized forms.
-      // This ignores spaces and harmless optional grouping without deleting
-      // parentheses that are mathematically significant.
+      // Fallback for memorized notation. This ignores whitespace and harmless
+      // optional grouping while retaining grouping that changes meaning.
       return latexComparable(studentLatex) === latexComparable(expected);
     }
 
@@ -817,7 +893,7 @@
       }else{
         streak = 0;
         feedback.className = "feedback wrong";
-        feedback.textContent = "✕ Not yet. Spaces and harmless outer brackets/parentheses are ignored. Check signs, functions, exponents, and numerator/denominator placement, then try again.";
+        feedback.textContent = "✕ Not yet. Spaces and harmless brackets/parentheses are ignored. Check signs, functions, exponents, and numerator/denominator placement, then try again.";
         setStats();
         field.focus();
       }
