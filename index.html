@@ -33,6 +33,20 @@
       --code-line:#e1e5ea;
       --switch-track:#c9d1dc;
       --switch-knob:#ffffff;
+
+      /* MathLive colors: explicitly controlled by the app theme so the
+         math editor follows the app switch instead of only the OS theme. */
+      --math-caret:#245da8;
+      --math-selection-color:#0f1722;
+      --math-selection-bg:#d8e8ff;
+      --math-text-highlight-bg:rgba(36,93,168,.10);
+      --math-contains-bg:#eaf1fb;
+      --math-contains-color:#245da8;
+      --math-latex:#245da8;
+      --math-smart-fence:#182230;
+      --math-composition-bg:#fff1c2;
+      --math-composition-text:#182230;
+
       --shadow:0 14px 40px rgba(20,35,60,.10);
     }
 
@@ -64,6 +78,20 @@
       --code-line:#303a47;
       --switch-track:#536174;
       --switch-knob:#f4f7fb;
+
+      /* Dark MathLive editing colors. These prevent the pale/white
+         selection and scope boxes visible when the app is manually dark. */
+      --math-caret:#8ec5ff;
+      --math-selection-color:#ffffff;
+      --math-selection-bg:#315a82;
+      --math-text-highlight-bg:rgba(127,179,255,.22);
+      --math-contains-bg:#263445;
+      --math-contains-color:#9ac8ff;
+      --math-latex:#8ec5ff;
+      --math-smart-fence:#edf2f7;
+      --math-composition-bg:#5a4819;
+      --math-composition-text:#ffffff;
+
       --shadow:0 14px 40px rgba(0,0,0,.28);
     }
     *{box-sizing:border-box}
@@ -112,12 +140,44 @@
     .equation-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:center;margin:8px 0 14px}
     .equals{font-family:Georgia,serif;font-size:2rem;font-weight:700;text-align:center}
     math-field{
-      width:100%;min-height:78px;font-size:clamp(1.35rem,3vw,2rem);border:2px solid var(--line);border-radius:14px;padding:12px;background:var(--control-bg);color:var(--ink);\n      --caret-color:var(--accent);
-      --selection-background-color:#d8e8ff;
-      --contains-highlight-background-color:#eaf1fb;
+      width:100%;
+      min-height:78px;
+      font-size:clamp(1.35rem,3vw,2rem);
+      border:2px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:var(--control-bg);
+      color:var(--ink);
+
+      /* MathLive public custom properties. Keeping these explicit is
+         important because MathLive's own dark appearance normally follows
+         prefers-color-scheme, while this app also has a manual theme switch. */
+      --hue:214;
+      --caret-color:var(--math-caret);
+      --selection-color:var(--math-selection-color);
+      --selection-background-color:var(--math-selection-bg);
+      --highlight-text:var(--math-text-highlight-bg);
+      --text-highlight-background-color:var(--math-text-highlight-bg);
+      --contains-highlight-background-color:var(--math-contains-bg);
+      --contains-highlight-color:var(--math-contains-color);
+      --latex-color:var(--math-latex);
+      --smart-fence-color:var(--math-smart-fence);
+      --smart-fence-opacity:.72;
+      --composition-background-color:var(--math-composition-bg);
+      --composition-text-color:var(--math-composition-text);
     }
-    math-field.known{background:var(--known-bg);border-color:var(--known-border)}
-    math-field.answer{border-color:#7fa6d6;box-shadow:0 0 0 3px rgba(36,93,168,.08)}
+    math-field.known{
+      background:var(--known-bg);
+      border-color:var(--known-border);
+    }
+    math-field.answer{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent);
+    }
+    math-field::part(virtual-keyboard-toggle),
+    math-field::part(menu-toggle){
+      color:var(--accent);
+    }
     .latex-line{font-size:.86rem;color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}
     .latex-line code{background:var(--code-bg);border:1px solid var(--code-line);border-radius:6px;padding:2px 5px}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
@@ -130,7 +190,7 @@
     .stat span{color:var(--muted);font-size:.82rem}
     details{margin-top:18px;border-top:1px solid var(--details-line);padding-top:14px}
     summary{cursor:pointer;font-weight:800}
-    .section-list{columns:2;column-gap:28px;margin-top:8px;color:#39485b;font-size:.92rem;line-height:1.5}
+    .section-list{columns:2;column-gap:28px;margin-top:8px;color:var(--muted);font-size:.92rem;line-height:1.5}
     footer{color:var(--muted);font-size:.82rem;margin-top:16px;line-height:1.5}
     footer a{color:var(--accent)}
     @media(max-width:720px){
