@@ -186,6 +186,24 @@
     .feedback{margin-top:14px;border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:var(--feedback-bg);min-height:50px;display:flex;align-items:center;font-weight:700}
     .feedback.correct{color:var(--correct);background:var(--correct-bg);border-color:var(--correct-line)}
     .feedback.wrong{color:var(--wrong);background:var(--wrong-bg);border-color:var(--wrong-line)}
+    .correct-check{
+      display:inline-block;
+      margin-right:.4em;
+      transform-origin:center;
+      animation:correctCheckPop 1s ease-out both;
+    }
+    @keyframes correctCheckPop{
+      from{transform:scale(4)}
+      to{transform:scale(1)}
+    }
+    #confettiCanvas{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      pointer-events:none;
+      z-index:9999;
+    }
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
     .stat{background:var(--stat-bg);border:1px solid var(--stat-line);border-radius:12px;padding:12px;text-align:center}
     .stat strong{display:block;font-size:1.35rem}
@@ -207,6 +225,7 @@
   </style>
 </head>
 <body>
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
   <div class="wrap">
     <header>
       <h1>Calculus I Identities &amp; Rules Drill</h1>
@@ -494,6 +513,7 @@
     const directionChip = document.getElementById("directionChip");
     const latexValue = document.getElementById("latexValue");
     const feedback = document.getElementById("feedback");
+    const confettiCanvas = document.getElementById("confettiCanvas");
     const completedStat = document.getElementById("completedStat");
     const correctStat = document.getElementById("correctStat");
     const percentageStat = document.getElementById("percentageStat");
@@ -541,6 +561,7 @@
     let correct = 0;
     let streak = 0;
     let finalized = false;
+    let checkAttempts = 0;
     let lastKey = "";
 
     function setStats(){
@@ -606,6 +627,7 @@
     function newQuestion(){
       current = pickQuestion();
       finalized = false;
+      checkAttempts = 0;
       const [left,right] = current.item;
       configureField(leftField, left, current.direction === "rtl");
       configureField(rightField, right, current.direction === "ltr");
@@ -881,6 +903,75 @@
       return latexComparable(studentLatex) === latexComparable(expected);
     }
 
+    function launchConfetti(){
+      const ctx = confettiCanvas.getContext("2d");
+      if(!ctx) return;
+
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      confettiCanvas.width = Math.floor(width * dpr);
+      confettiCanvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const colors = [
+        "#ff4d4d", "#ffb84d", "#ffe14d", "#4ddf83",
+        "#4db8ff", "#8c6cff", "#ff66c4", "#ffffff"
+      ];
+
+      const particles = Array.from({length: 190}, () => ({
+        x: Math.random() * width,
+        y: -20 - Math.random() * height * 0.45,
+        w: 5 + Math.random() * 7,
+        h: 8 + Math.random() * 10,
+        vx: -1.8 + Math.random() * 3.6,
+        vy: 2.5 + Math.random() * 4.5,
+        gravity: .045 + Math.random() * .045,
+        rotation: Math.random() * Math.PI * 2,
+        vr: -.14 + Math.random() * .28,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      }));
+
+      const start = performance.now();
+      const duration = 3200;
+
+      function frame(now){
+        const elapsed = now - start;
+        ctx.clearRect(0, 0, width, height);
+
+        for(const p of particles){
+          p.vy += p.gravity;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rotation += p.vr;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        }
+
+        if(elapsed < duration && particles.some(p => p.y < height + 30)){
+          requestAnimationFrame(frame);
+        }else{
+          ctx.clearRect(0, 0, width, height);
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    function showCorrectFeedback(){
+      feedback.className = "feedback correct";
+      feedback.innerHTML =
+        '<span class="correct-check" aria-hidden="true">✅</span>' +
+        '<span>Correct. Press Enter or use Next Identity to continue.</span>';
+    }
+
     function checkAnswer(){
       if(finalized) return;
       const field = answerField();
@@ -891,7 +982,12 @@
         field.focus();
         return;
       }
+
+      checkAttempts++;
+
       if(isCorrect(student, expectedLatex())){
+        const firstTryCorrect = checkAttempts === 1;
+
         finalized = true;
         completed++;
         correct++;
@@ -899,8 +995,13 @@
         field.readOnly = true;
         field.classList.remove("answer");
         field.classList.add("known");
-        feedback.className = "feedback correct";
-        feedback.textContent = "✓ Correct. Press Enter or use Next Identity to continue.";
+
+        showCorrectFeedback();
+
+        if(firstTryCorrect){
+          launchConfetti();
+        }
+
         setStats();
         highlightAction("next");
         nextBtn.focus();
