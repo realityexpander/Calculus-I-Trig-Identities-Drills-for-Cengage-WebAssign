@@ -28,7 +28,7 @@ NOTE: INTENDED LARGE SCREEN FORMAT: DESKTOP / LAPTOP / iPAD. NOT TESTED NOR OPTI
 - Reset Score control
 - Responsive desktop/mobile layout
 - Single-file HTML app
-- Conversation with ChatGPT 5.6 High: https://chatgpt.com/share/6ac154a0-5f3c-83ea-a783-49bd2f33e53d
+- Conversation with ChatGPT 5.6 High: https://chatgpt.com/share/6aca972d-1570-83ea-8e0c-63f14c41249b
 
 ## Sections
 
