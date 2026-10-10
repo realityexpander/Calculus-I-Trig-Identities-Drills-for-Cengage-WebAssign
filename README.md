@@ -9,6 +9,8 @@ Link to live app: https://realityexpander.github.io/Calculus-I-Trig-Identities-D
 
 The app does **not** use multiple-choice questions. It shows one side of an equation and requires the user to type the missing side using an interactive mathematical equation editor.
 
+NOTE: INTENDED LARGE SCREEN FORMAT: DESKTOP / LAPTOP / iPAD. NOT TESTED NOR OPTIMAL FOR USE ON PHONES.
+
 ## Features
 
 - Written-answer practice using a real equation editor
